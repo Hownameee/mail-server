@@ -60,8 +60,8 @@ func (s *OtpService) ValidateCode(ctx context.Context, req *mail.ValidateCodeReq
 	inputCode := req.OtpCode
 
 	StoreMu.Lock()
+	defer StoreMu.Unlock()
 	val, exists := OtpStore[usermail]
-	StoreMu.Unlock()
 
 	if !exists {
 		return &mail.ValidateCodeResponse{
