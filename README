@@ -1,0 +1,62 @@
+# High-Performance gRPC Mail & OTP Server
+
+A high-concurrency microservice built with Go and gRPC to handle email delivery and OTP management.
+
+## Core Problem & Solution
+
+* **The Problem:** Standard `net/smtp` is slow because it creates a new connection (TCP handshake + TLS + Auth) for every single email sent.
+* **Our Solution:** Implements a **Worker Pool with Persistent Connections**. Workers pre-dial and stay authenticated, allowing emails to be dispatched instantly with zero handshake latency.
+
+## ⚡ Key Features
+
+* **Zero-Latency Sending:** Persistent SMTP connections eliminate handshake overhead.
+* **Concurrency:** Configurable worker pool (default: 5) handles multiple clients simultaneously without blocking.
+* **Thread-Safe OTP:** In-memory storage protected by `sync.RWMutex` with atomic validation logic to prevent race conditions.
+* **Auto-Cleanup:** Background "Janitor" worker removes expired OTPs to prevent memory leaks.
+* **Graceful Shutdown:** Completes active jobs before closing connections on `SIGINT` or `SIGTERM`.
+
+## ⚙️ Configuration (.env)
+
+```Ini, TOML
+
+PORT=40700
+WORKERS=5                # Concurrent SMTP connections
+OTP_CLEANUP_MINUTES=5    # Expiry check interval
+
+# SMTP Settings (e.g., Gmail)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=465
+EMAIL=your_email@gmail.com
+APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+```
+
+## 🚀 Usage
+
+1. Setup
+
+```Bash
+go mod tidy
+make generate  # Re-generates Protobuf code
+```
+
+2. Run
+
+```Bash
+
+go run main.go
+```
+
+## 📚 API Overview
+
+### `OtpService`
+
+| Method | Inputs | Description |
+| :--- | :--- | :--- |
+| **`SendCode`** | `email` | Generates a 6-digit code, stores it in memory, and dispatches an email via the worker pool. |
+| **`ValidateCode`** | `email`, `otp` | Thread-safe validation. Automatically deletes the code upon success to prevent replay attacks. |
+
+### `MailService`
+
+| Method | Inputs | Description |
+| :--- | :--- | :--- |
+| **`SendMail`** | `to`, `subject`, `body` | Asynchronously queues a raw email to be processed by the next available worker. |
