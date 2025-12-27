@@ -3,8 +3,11 @@ package main
 import (
 	"log"
 	"net"
+	"os"
+	"os/signal"
 	"service/mail-server/config"
 	"service/mail-server/register"
+	"syscall"
 
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
@@ -25,8 +28,19 @@ func main() {
 	server := grpc.NewServer()
 	register.Register(server, cfg)
 
-	log.Println("gRPC Server running on :" + cfg.Port)
-	if err := server.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	go func() {
+		log.Println("gRPC Server running on :" + cfg.Port)
+		if err := server.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+
+	<-stop
+	log.Println("Shutting down server...")
+
+	server.GracefulStop()
+	log.Println("✅ Server exited properly")
 }
