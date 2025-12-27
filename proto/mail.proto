@@ -1,0 +1,46 @@
+syntax = "proto3";
+package mail;
+option go_package = "pb/mail";
+
+enum Status {
+    FAILED = 0;
+    SUCCESS = 1;
+}
+
+message SendCodeRequest {
+    string email = 1;
+}
+
+message SendCodeResponse {
+    Status status = 1;
+    string otpCode = 2;
+}
+
+message ValidateCodeRequest {
+    string email = 1;
+    string otpCode = 2;
+}
+
+message ValidateCodeResponse {
+    Status status = 1;
+    bool isValid = 2;
+}
+
+service OtpService {
+    rpc SendCode(SendCodeRequest) returns (SendCodeResponse);
+    rpc ValidateCode(ValidateCodeRequest) returns (ValidateCodeResponse);
+}
+
+message SendEmailRequest {
+    string to = 1;
+    string subject = 2;
+    string body = 3;
+}
+
+message SendEmailResponse {
+    Status status = 1;
+}
+
+service MailService {
+    rpc SendMail(SendEmailRequest) returns (SendEmailResponse);
+}
