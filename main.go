@@ -6,13 +6,18 @@ import (
 	"service/mail-server/config"
 	"service/mail-server/register"
 
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, relying on system environment variables")
+	}
+
 	cfg := config.New()
 
-	lis, err := net.Listen("tcp", ":"+cfg.PORT)
+	lis, err := net.Listen("tcp", ":"+cfg.Port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -20,7 +25,7 @@ func main() {
 	server := grpc.NewServer()
 	register.Register(server, cfg)
 
-	log.Println("gRPC Server running on :" + cfg.PORT)
+	log.Println("gRPC Server running on :" + cfg.Port)
 	if err := server.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

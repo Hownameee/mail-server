@@ -9,12 +9,13 @@ import (
 	"google.golang.org/grpc"
 )
 
-func Register(server *grpc.Server, config *config.Config) error {
-	mailClient := mailservices.NewMailClient(config, 5)
+func Register(server *grpc.Server, cfg *config.Config) error {
+	mailClient := mailservices.NewMailClient(cfg, cfg.Workers)
 
-	mail.RegisterOtpServiceServer(server, &controllers.OtpService{Config: config, MailClient: mailClient})
-	go controllers.StartCleanupWorker(5)
+	mail.RegisterOtpServiceServer(server, &controllers.OtpService{Config: cfg, MailClient: mailClient})
+	mail.RegisterMailServiceServer(server, &controllers.MailService{Config: cfg, MailClient: mailClient})
 
-	mail.RegisterMailServiceServer(server, &controllers.MailService{Config: config, MailClient: mailClient})
+	go controllers.StartCleanupWorker(cfg.OtpCleanupMinutes)
+
 	return nil
 }

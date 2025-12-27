@@ -3,3 +3,5 @@ gen
 node_client
 
 mail-server
+
+.env

@@ -1,18 +1,25 @@
 package config
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 type Config struct {
-	PORT      string
-	EmailUser string
-	EmailPass string
-	EmailHost string
-	EmailPort string
+	Port              string
+	Workers           int
+	OtpCleanupMinutes int
+	EmailUser         string
+	EmailPass         string
+	EmailHost         string
+	EmailPort         string
 }
 
 func New() *Config {
 	return &Config{
-		PORT: GetEnv("PORT", "40700"),
+		Port:              GetEnv("PORT", "40700"),
+		Workers:           GetEnvInt("WORKERS", 5),
+		OtpCleanupMinutes: GetEnvInt("OTP_CLEANUP_MINUTES", 5),
 
 		EmailUser: GetEnv("EMAIL", ""),
 		EmailPass: GetEnv("APP_PASSWORD", ""),
@@ -27,4 +34,16 @@ func GetEnv(env string, defaultEnv string) string {
 		res = defaultEnv
 	}
 	return res
+}
+
+func GetEnvInt(env string, defaultEnv int) int {
+	res := os.Getenv(env)
+	if res == "" {
+		return defaultEnv
+	}
+	val, err := strconv.Atoi(res)
+	if err != nil {
+		return defaultEnv
+	}
+	return val
 }

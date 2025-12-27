@@ -105,7 +105,7 @@ func StartCleanupWorker(minutes int) {
 		elapsed := time.Since(start)
 
 		if keysDeleted > 0 {
-			fmt.Printf("🧹 Cleanup: Removed %d expired OTPs in %s\n", keysDeleted, elapsed)
+			fmt.Printf("Cleanup: Removed %d expired OTPs in %s\n", keysDeleted, elapsed)
 		}
 	}
 }
