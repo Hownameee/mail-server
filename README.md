@@ -2,7 +2,7 @@
 
 A high-concurrency microservice built with Go and gRPC to handle email delivery and OTP management.
 
-## Core Problem & Solution
+## 🎯 Core Problem & Solution
 
 * **The Problem:** Standard `net/smtp` is slow because it creates a new connection (TCP handshake + TLS + Auth) for every single email sent.
 * **Our Solution:** Implements a **Worker Pool with Persistent Connections**. Workers pre-dial and stay authenticated, allowing emails to be dispatched instantly with zero handshake latency.
