@@ -12,5 +12,5 @@ plugins:
     opt: paths=source_relative
 
   - remote: buf.build/bufbuild/es:v2.10.2
-    out: node_client/gen
+    out: ../node_client/gen
     opt: target=ts

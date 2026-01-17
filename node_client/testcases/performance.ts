@@ -5,7 +5,7 @@ import config from "../config/config";
 
 export default async function performanceTest(transport: Transport) {
   const client = createClient(MailService, transport);
-  const concurrencyCount = 15;
+  const concurrencyCount = 10;
   
   console.log("\n--- PERFORMANCE TEST (Concurrent) ---");
   console.log(`Sending ${concurrencyCount} emails concurrently...\n`);

@@ -1,6 +1,6 @@
 import { configDotenv } from "dotenv";
 
-configDotenv({ path: "../.env" });
+configDotenv({ path: "../go_server/.env" });
 
 const config = {
   port: process.env.PORT,

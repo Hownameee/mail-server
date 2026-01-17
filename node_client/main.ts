@@ -19,10 +19,10 @@ const transport = createGrpcTransport({
 
 (async () => {
   // otp test
-  // await otpTest(transport);
+  await otpTest(transport);
 
   // send email test
-  // await mailTest(transport);
+  await mailTest(transport);
 
   // performance test
   await performanceTest(transport);
