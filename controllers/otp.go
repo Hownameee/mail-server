@@ -49,7 +49,8 @@ func (s *OtpService) SendCode(ctx context.Context, req *mail.SendCodeRequest) (*
 	StoreMu.Unlock()
 
 	return &mail.SendCodeResponse{
-		Status: mail.Status_SUCCESS,
+		Status:  mail.Status_SUCCESS,
+		OtpCode: otpCode,
 	}, nil
 }
 
