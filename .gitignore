@@ -1,7 +1,9 @@
 gen
 
-node_client
-
 mail-server
 
 .env
+
+node_modules
+
+package-lock.json

@@ -29,6 +29,9 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=465
 EMAIL=your_email@gmail.com
 APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+
+# For test in node_client
+TARGET=example@gmail.com
 ```
 
 ## 🚀 Usage
