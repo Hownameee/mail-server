@@ -41,6 +41,15 @@ APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
 TARGET=example@gmail.com
 ```
 
+**Recommended for Testing:**
+Use these values to ensure the Node.js client tests (which check for expiration) finish quickly without long waits.
+
+```Ini, TOML
+# Test Settings (Short durations to speed up client tests)
+OTP_CLEANUP_SECONDS=15    # Run cleanup every 15s
+OTP_LIFESPAN_SECONDS=5    # OTP expires after 5s
+```
+
 ## 🚀 Server Usage
 
 ### Setup
