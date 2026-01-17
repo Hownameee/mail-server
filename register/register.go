@@ -15,7 +15,7 @@ func Register(server *grpc.Server, cfg *config.Config) error {
 	mail.RegisterOtpServiceServer(server, &controllers.OtpService{Config: cfg, MailClient: mailClient})
 	mail.RegisterMailServiceServer(server, &controllers.MailService{Config: cfg, MailClient: mailClient})
 
-	go controllers.StartCleanupWorker(cfg.OtpCleanupMinutes)
+	go controllers.StartCleanupWorker(cfg.OtpCleanupSeconds)
 
 	return nil
 }

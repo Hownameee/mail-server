@@ -20,8 +20,9 @@ A high-concurrency microservice built with Go and gRPC to handle email delivery 
 ```Ini, TOML
 
 PORT=40700
-WORKERS=5                # Concurrent SMTP connections
-OTP_CLEANUP_MINUTES=5    # Expiry check interval
+WORKERS=5                 # Concurrent SMTP connections
+OTP_CLEANUP_SECONDS=180   # Expiry check interval
+OTP_LIFESPAN_SECONDS=120  # Duration before OTP expires
 
 # SMTP Settings (e.g., Gmail)
 EMAIL_HOST=smtp.gmail.com

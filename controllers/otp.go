@@ -26,15 +26,13 @@ type OtpUser struct {
 var OtpStore = make(map[string]OtpUser)
 var StoreMu sync.RWMutex
 
-var duration = 120
-
 func (s *OtpService) SendCode(ctx context.Context, req *mail.SendCodeRequest) (*mail.SendCodeResponse, error) {
 	usermail := req.Email
 	otpCode, created := otpservices.GenerateOtp()
-	expiry := created.Add(time.Duration(duration) * time.Second)
+	expiry := created.Add(time.Duration(s.Config.OtpLifeSpanSeconds) * time.Second)
 
 	subject := "Your Verification Code"
-	body := fmt.Sprintf("Your OTP code is: %s. It expires in %d seconds.", otpCode, duration)
+	body := fmt.Sprintf("Your OTP code is: %s. It expires in %d seconds.", otpCode, s.Config.OtpLifeSpanSeconds)
 
 	err := s.MailClient.SendEmail([]string{usermail}, subject, body)
 	if err != nil {
@@ -88,9 +86,9 @@ func (s *OtpService) ValidateCode(ctx context.Context, req *mail.ValidateCodeReq
 	}, nil
 }
 
-func StartCleanupWorker(minutes int) {
+func StartCleanupWorker(seconds int) {
 	for {
-		time.Sleep(time.Duration(minutes) * time.Minute)
+		time.Sleep(time.Duration(seconds) * time.Second)
 		start := time.Now()
 		StoreMu.Lock()
 		now := time.Now()

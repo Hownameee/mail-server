@@ -6,20 +6,22 @@ import (
 )
 
 type Config struct {
-	Port              string
-	Workers           int
-	OtpCleanupMinutes int
-	EmailUser         string
-	EmailPass         string
-	EmailHost         string
-	EmailPort         string
+	Port               string
+	Workers            int
+	OtpCleanupSeconds  int
+	OtpLifeSpanSeconds int
+	EmailUser          string
+	EmailPass          string
+	EmailHost          string
+	EmailPort          string
 }
 
 func New() *Config {
 	return &Config{
-		Port:              GetEnv("PORT", "40700"),
-		Workers:           GetEnvInt("WORKERS", 5),
-		OtpCleanupMinutes: GetEnvInt("OTP_CLEANUP_MINUTES", 5),
+		Port:               GetEnv("PORT", "40700"),
+		Workers:            GetEnvInt("WORKERS", 5),
+		OtpCleanupSeconds:  GetEnvInt("OTP_CLEANUP_SECONDS", 180),
+		OtpLifeSpanSeconds: GetEnvInt("OTP_LIFESPAN_SECONDS", 120),
 
 		EmailUser: GetEnv("EMAIL", ""),
 		EmailPass: GetEnv("APP_PASSWORD", ""),
