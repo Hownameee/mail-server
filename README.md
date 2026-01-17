@@ -99,3 +99,21 @@ npm start
 | Method | Inputs | Description |
 | :--- | :--- | :--- |
 | **`SendMail`** | `to`, `subject`, `body` | Asynchronously queues a raw email to be processed by the next available worker. |
+
+## 📊 Performance Benchmark (15 Concurrent Clients)
+
+Here is the average response time per request based on the worker pool size:
+
+1 Worker: ~1700ms (High Latency)
+
+2 Workers: ~800ms
+
+3 Workers: ~700ms
+
+≥ 4 Workers: ~500ms - 700ms (Saturation Point)
+
+## 💡 Conclusion
+
+4 Workers is the optimal configuration.
+
+The data shows that performance improves significantly up to 4 workers but plateaus afterwards. Beyond this point, the bottleneck shifts from our application to the external Gmail SMTP server. Since the upstream provider handles requests sequentially or enforces rate limits, adding more workers (5-10) adds system overhead without reducing the average wait time.
